@@ -5,13 +5,16 @@
  */
 package br.com.edsonmoretti.jgrafico;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.util.Rotation;
 
 /**
  *
@@ -20,10 +23,30 @@ import org.jfree.data.general.DefaultPieDataset;
 public final class JGraficoPizza extends JGrafico {
 
     private final DefaultPieDataset dados = new DefaultPieDataset();
+    private boolean girar;
+    private Rotation direcao = Rotation.CLOCKWISE;
+    private float foregroundAlpha = 1.0f;
+    private final HashMap<String, Double> oqueDestacarDaPizza = new HashMap<>();
+    private Tipo tipo = Tipo._2D;
+
+    public enum Tipo {
+        _3D, _2D
+    };
+
+    public JGraficoPizza(String titulo, Tipo tipo) {
+        this(titulo);
+        this.tipo = tipo;
+    }
 
     public JGraficoPizza(String titulo) {
         super(titulo);
         setSize(500, 500);
+    }
+
+    public void adicionarDadoEDestacar(String descricao, Number valor, Double percentualDaDistanciaDoCentro) {
+        adicionarDado(descricao, valor);
+        adicionarDestaqueDoGraficoPizza(descricao, percentualDaDistanciaDoCentro);
+
     }
 
     public void adicionarDado(String descricao, Number valor) {
@@ -36,19 +59,63 @@ public final class JGraficoPizza extends JGrafico {
 
     @Override
     public JFreeChart criarGrafico() {
-        JFreeChart c = ChartFactory.createPieChart(getTituloDoGrafico(),
-                dados,
-                isExibirLegendas(),
-                isExibirTooltips(),
-                false
-        );
+        JFreeChart c;
+        if (tipo == Tipo._2D) {
+            c = ChartFactory.createPieChart(getTituloDoGrafico(),
+                    dados,
+                    isExibirLegendas(),
+                    isExibirTooltips(),
+                    false
+            );
+        } else {
+            c = ChartFactory.createPieChart3D(getTituloDoGrafico(),
+                    dados,
+                    isExibirLegendas(),
+                    isExibirTooltips(),
+                    false
+            );
+        }
+        PiePlot plot = (PiePlot) c.getPlot();
+        if (girar) {
+            plot.setDirection(direcao);
+            plot.setForegroundAlpha(foregroundAlpha);
+            final Rotator rotator = new Rotator(plot);
+            rotator.start();
+        }
+        if (!oqueDestacarDaPizza.isEmpty()) {
+            for (String descricao : oqueDestacarDaPizza.keySet()) {
+                plot.setExplodePercent(descricao, oqueDestacarDaPizza.get(descricao));
+            }
+        }
         return c;
     }
 
-    private JPanel createDemoPanel() {
-        JFreeChart chart = criarGrafico();
-        return new ChartPanel(chart);
+    public void adicionarDestaqueDoGraficoPizza(String descricaoDoDado, double percentualDaDistanciaDoCentro) {
+        oqueDestacarDaPizza.put(descricaoDoDado, percentualDaDistanciaDoCentro);
     }
+
+    public void removeDestaqueDoGraficoPizza(String descricaoDoDado) {
+        oqueDestacarDaPizza.remove(descricaoDoDado);
+    }
+
+    public void limparDestaquesDoGraficoPizza() {
+        oqueDestacarDaPizza.clear();
+    }
+
+    public void setGirar(boolean girar, Rotation direcao, float foregroundAlpha) {
+        setGirar(girar);
+        this.direcao = direcao;
+        this.foregroundAlpha = foregroundAlpha;
+    }
+
+    public void setGirar(boolean girar) {
+        this.girar = girar;
+    }
+    public void setRotacionar(boolean girar) {
+        this.girar = girar;
+    }
+
+    
 
     @Override
     public void setVisible(boolean bln) {
@@ -59,7 +126,7 @@ public final class JGraficoPizza extends JGrafico {
                 Logger.getLogger(JGraficoPizza.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        setContentPane(createDemoPanel());
+        setContentPane(criarJPanel());
         super.setVisible(bln); //To change body of generated methods, choose Tools | Templates.
     }
 

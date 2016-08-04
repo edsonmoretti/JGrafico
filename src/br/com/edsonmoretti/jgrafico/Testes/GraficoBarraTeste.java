@@ -44,8 +44,8 @@ public class GraficoBarraTeste {
         demo.adicionar(g2);
         demo.adicionar(g3);
 
-        demo.setOrientacao(PlotOrientation.HORIZONTAL);
-//        demo.setOrientacao(PlotOrientation.VERTICAL);
+//        demo.setOrientacao(PlotOrientation.HORIZONTAL);
+        demo.setOrientacao(PlotOrientation.VERTICAL);
         demo.exibirLegendas(true);
         demo.exibirTooltip(true);
         demo.centralizaNaTela();

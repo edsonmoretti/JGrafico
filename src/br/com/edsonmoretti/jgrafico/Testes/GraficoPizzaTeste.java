@@ -5,6 +5,8 @@
  */
 package br.com.edsonmoretti.jgrafico.Testes;
 
+import org.jfree.util.Rotation;
+
 /**
  *
  * @author Edson Moretti
@@ -25,6 +27,10 @@ class GraficoPizzaTeste {
         demo.exibirLegendas(true);
         demo.exibirTooltip(true);
         demo.centralizaNaTela();
+        demo.adicionarDado("Produto 6", 20);
+        demo.adicionarDadoEDestacar("Produto 7", 21, 0.10);
+        demo.adicionarDestaqueDoGraficoPizza("Produto 6", 0.1);
+        demo.setGirar(true, Rotation.CLOCKWISE, 1.0f); 
         demo.setVisible(true);
     }
 
