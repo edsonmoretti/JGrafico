@@ -5,25 +5,14 @@
  */
 package br.com.edsonmoretti.jgrafico;
 
-import br.com.edsonmoretti.jgrafico.JGraficoPizza;
-import br.com.edsonmoretti.jgrafico.JGraficoException;
-import java.awt.Dialog;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -35,7 +24,12 @@ public class JGraficoBarra extends JGrafico {
     private String descricaoLateralEsquerda;
     private String descricaoInferior;
     private PlotOrientation orientacao = PlotOrientation.VERTICAL;
+    private JGraficoTipoDimensao tipoDimensao = JGraficoTipoDimensao._2D;
 
+    public JGraficoBarra(String titulo, JGraficoTipoDimensao tipo) {
+        this(titulo);
+        tipoDimensao = tipo;
+    }
     public JGraficoBarra(String titulo) {
         super(titulo);
     }
@@ -60,16 +54,31 @@ public class JGraficoBarra extends JGrafico {
 
     @Override
     public JFreeChart criarGrafico() {
-        JFreeChart c = ChartFactory.createBarChart(
-                getTituloDoGrafico(),
-                descricaoInferior,
-                descricaoLateralEsquerda,
-                dataSet,
-                orientacao,
-                isExibirLegendas(),
-                isExibirTooltips(),
-                false
-        );
+        JFreeChart c;
+        if (tipoDimensao == JGraficoTipoDimensao._2D) {
+            c = ChartFactory.createBarChart(
+                    getTituloDoGrafico(),
+                    descricaoInferior,
+                    descricaoLateralEsquerda,
+                    dataSet,
+                    orientacao,
+                    isExibirLegendas(),
+                    isExibirTooltips(),
+                    false
+            );
+        } else {
+            c = ChartFactory.createBarChart3D(
+                    getTituloDoGrafico(),
+                    descricaoInferior,
+                    descricaoLateralEsquerda,
+                    dataSet,
+                    orientacao,
+                    isExibirLegendas(),
+                    isExibirTooltips(),
+                    false
+            );
+
+        }
         return c;
     }
 

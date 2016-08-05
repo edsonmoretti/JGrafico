@@ -8,9 +8,7 @@ package br.com.edsonmoretti.jgrafico;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
@@ -27,15 +25,11 @@ public final class JGraficoPizza extends JGrafico {
     private Rotation direcao = Rotation.CLOCKWISE;
     private float foregroundAlpha = 1.0f;
     private final HashMap<String, Double> oqueDestacarDaPizza = new HashMap<>();
-    private Tipo tipo = Tipo._2D;
+    private JGraficoTipoDimensao tipo = JGraficoTipoDimensao._2D;
 
-    public enum Tipo {
-        _3D, _2D
-    };
-
-    public JGraficoPizza(String titulo, Tipo tipo) {
+    public JGraficoPizza(String titulo, JGraficoTipoDimensao tipoDimensao) {
         this(titulo);
-        this.tipo = tipo;
+        this.tipo = tipoDimensao;
     }
 
     public JGraficoPizza(String titulo) {
@@ -60,15 +54,15 @@ public final class JGraficoPizza extends JGrafico {
     @Override
     public JFreeChart criarGrafico() {
         JFreeChart c;
-        if (tipo == Tipo._2D) {
-            c = ChartFactory.createPieChart(getTituloDoGrafico(),
+        if (tipo == JGraficoTipoDimensao._3D) {
+            c = ChartFactory.createPieChart3D(getTituloDoGrafico(),
                     dados,
                     isExibirLegendas(),
                     isExibirTooltips(),
                     false
             );
         } else {
-            c = ChartFactory.createPieChart3D(getTituloDoGrafico(),
+            c = ChartFactory.createPieChart(getTituloDoGrafico(),
                     dados,
                     isExibirLegendas(),
                     isExibirTooltips(),
@@ -111,11 +105,10 @@ public final class JGraficoPizza extends JGrafico {
     public void setGirar(boolean girar) {
         this.girar = girar;
     }
+
     public void setRotacionar(boolean girar) {
         this.girar = girar;
     }
-
-    
 
     @Override
     public void setVisible(boolean bln) {

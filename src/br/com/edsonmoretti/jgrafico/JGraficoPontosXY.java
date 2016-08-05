@@ -24,7 +24,7 @@ import org.jfree.ui.RefineryUtilities;
 /**
  * A demo scatter plot.
  */
-public class ScatterPlotDemo1 extends JGrafico {
+public class JGraficoPontosXY extends JGrafico {
 
     private String rotuloX = "X";
     private String rotuloY = "Y";
@@ -34,13 +34,13 @@ public class ScatterPlotDemo1 extends JGrafico {
     private boolean exibirLinhaEixoY = true;
     private DefaultXYDataset dataset = new DefaultXYDataset();
 
-    public ScatterPlotDemo1(String titulo) {
+    public JGraficoPontosXY(String titulo) {
         super(titulo);
     }
 
     @Override
     public JFreeChart criarGrafico() {
-        JFreeChart chart = ChartFactory.createScatterPlot(getTitle(), rotuloX, rotuloY, dataset, orientacao, isExibirLegendas(), isExibirTooltips(), false);
+        JFreeChart chart = ChartFactory.createScatterPlot(getTituloDoGrafico(), rotuloX, rotuloY, dataset, orientacao, isExibirLegendas(), isExibirTooltips(), false);
 
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setNoDataMessage(mensagemSemDados);
@@ -79,42 +79,11 @@ public class ScatterPlotDemo1 extends JGrafico {
         return chart;
     }
 
-    public static void main(String[] args) {
-        ScatterPlotDemo1 demo = new ScatterPlotDemo1("Titulo");
-        JGraficoGrupoXY grupo = new JGraficoGrupoXY("Edson");
-        grupo.add(1, 10);
-        grupo.add(2, 20);
-        grupo.add(3, 30);
-        grupo.add(4, 40);
-        JGraficoGrupoXY grupo2 = new JGraficoGrupoXY("Daniel");
-        grupo2.add(1, 45);
-        grupo2.add(2, 50);
-        grupo2.add(3, 60);
-        grupo2.add(4, 70);
-        JGraficoGrupoXY grupo3 = new JGraficoGrupoXY("Heleno");
-        grupo3.add(1, -10);
-        grupo3.add(2, -20);
-        grupo3.add(3, -30);
-        grupo3.add(4, -40);
-
-//        demo.criar
-        
-        demo.adicionar(grupo, grupo2, grupo3);
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setTamanho(800, 700);
-        demo.setExibirLegendas(true);
-        demo.setExibirTooltips(true);
-        demo.setRotuloX("Dias");
-        demo.setRotuloY("Qtd Estoque");
-        demo.get();
-        demo.setVisible(true);
-    }
-
     private static final int X = 0;
     private static final int Y = 1;
     private HashMap<String, HashMap<Number, Number>> valores = new HashMap<>();
 
-    public void get() {
+    private void atualizarDataSet() {
         for (String serie : valores.keySet()) {
             double[][] ponto = new double[2][valores.get(serie).size()];
             int posicao = 0;
@@ -141,14 +110,13 @@ public class ScatterPlotDemo1 extends JGrafico {
     }
 
     public void adicionar(String serieDados, Number valorX, Number valorY) {
-
         if (valores.containsKey(serieDados)) {
             valores.get(serieDados).put(valorX, valorY);
         } else {
             valores.put(serieDados, new HashMap<>());
             valores.get(serieDados).put(valorX, valorY);
         }
-
+        atualizarDataSet();
     }
 
     @Override

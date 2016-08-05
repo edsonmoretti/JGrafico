@@ -7,6 +7,7 @@ package br.com.edsonmoretti.jgrafico.Testes;
 
 import br.com.edsonmoretti.jgrafico.JGraficoBarra;
 import br.com.edsonmoretti.jgrafico.JGraficoGrupo;
+import br.com.edsonmoretti.jgrafico.JGraficoTipoDimensao;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.util.logging.Level;
@@ -24,7 +25,8 @@ public class GraficoBarraTeste {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        JGraficoBarra demo = new JGraficoBarra("Edson Moretti - JGrafico");
+        JGraficoBarra demo = 
+                new JGraficoBarra("Edson Moretti - JGrafico", JGraficoTipoDimensao._3D);
         demo.setTituloDoGrafico("Titulo do Gráfico Barra");
 
         JGraficoGrupo g1 = new JGraficoGrupo("Janeiro");
