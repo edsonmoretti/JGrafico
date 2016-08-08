@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -24,7 +23,7 @@ import org.jfree.data.xy.DefaultXYDataset;
 /**
  * A demo scatter plot.
  */
-public class JGraficoPontosXY extends JGrafico {
+public class JGraficoDeLinhaXY extends JGrafico {
 
     private String rotuloX = "X";
     private String rotuloY = "Y";
@@ -32,15 +31,22 @@ public class JGraficoPontosXY extends JGrafico {
     private String mensagemSemDados = "Não há dados.";
     private boolean exibitLinhaEixoX = true;
     private boolean exibirLinhaEixoY = true;
-    private DefaultXYDataset dataset = new DefaultXYDataset();
+    private boolean exibirPontos = true;
 
-    public JGraficoPontosXY(String titulo) {
+    private final DefaultXYDataset dataset = new DefaultXYDataset();
+    private final HashMap<Integer, Color> coresDasLinhas = new HashMap<>();
+    private static final int X = 0;
+    private static final int Y = 1;
+    private HashMap<String, HashMap<Number, Number>> valores = new HashMap<>();
+    private Color corDeFundo = Color.DARK_GRAY;
+
+    public JGraficoDeLinhaXY(String titulo) {
         super(titulo);
     }
 
     @Override
     public JFreeChart criarGrafico() {
-        JFreeChart chart = ChartFactory.createScatterPlot(getTituloDoGrafico(), rotuloX, rotuloY, dataset, orientacao, isExibirLegendas(), isExibirTooltips(), false);
+        JFreeChart chart = ChartFactory.createXYLineChart(getTituloDoGrafico(), rotuloX, rotuloY, dataset, orientacao, isExibirLegendas(), isExibirTooltips(), false);
 
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setNoDataMessage(mensagemSemDados);
@@ -56,32 +62,38 @@ public class JGraficoPontosXY extends JGrafico {
         plot.setRangeMinorGridlineStroke(new BasicStroke(0.0f));
         plot.setRangeGridlinePaint(Color.blue);
 
-        plot.setDomainMinorGridlinesVisible(true);
-        plot.setRangeMinorGridlinesVisible(true);
+        plot.setOutlinePaint(Color.BLUE);
+        plot.setOutlineStroke(new BasicStroke(2.0f));
 
-        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
-        renderer.setSeriesOutlinePaint(0, Color.black);
-        renderer.setUseOutlinePaint(true);
-        NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
-        domainAxis.setAutoRangeIncludesZero(false);
+        plot.setBackgroundPaint(corDeFundo);
 
-        domainAxis.setTickMarkInsideLength(2.0f);
-        domainAxis.setTickMarkOutsideLength(2.0f);
-
-        domainAxis.setMinorTickCount(2);
-        domainAxis.setMinorTickMarksVisible(true);
-
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setTickMarkInsideLength(2.0f);
-        rangeAxis.setTickMarkOutsideLength(2.0f);
-        rangeAxis.setMinorTickCount(2);
-        rangeAxis.setMinorTickMarksVisible(true);
+        if (exibirPontos) {
+            XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+            if (!coresDasLinhas.isEmpty()) {
+                for (Integer index : coresDasLinhas.keySet()) {
+                    renderer.setSeriesPaint(index, coresDasLinhas.get(index));
+                }
+            }
+            plot.setRenderer(renderer);
+        }
         return chart;
     }
 
-    private static final int X = 0;
-    private static final int Y = 1;
-    private HashMap<String, HashMap<Number, Number>> valores = new HashMap<>();
+    public void setCorDeFundo(Color cor) {
+        corDeFundo = cor;
+    }
+
+    public Color getCorDeFundo() {
+        return corDeFundo;
+    }
+
+    public void adicionarCorNaLinha(int indexLinha, Color cor) {
+        this.coresDasLinhas.put(indexLinha, cor);
+    }
+
+    public void removerCorDaLinha(int indexLinha, Color cor) {
+        this.coresDasLinhas.remove(indexLinha, cor);
+    }
 
     private void atualizarDataSet() {
         for (String serie : valores.keySet()) {
@@ -173,6 +185,26 @@ public class JGraficoPontosXY extends JGrafico {
 
     public void setExibirLinhaEixoY(boolean exibirLinhaEixoY) {
         this.exibirLinhaEixoY = exibirLinhaEixoY;
+    }
+
+    public boolean isExibirPontos() {
+        return exibirPontos;
+    }
+
+//    public void setExibirPontos(boolean exibirPontos, boolean exbibirSetasDirecionais) {
+//        this.exbibirSetasDirecionais = exbibirSetasDirecionais;
+//        this.exibirPontos = exibirPontos;
+//    }
+    public void setExibirPontos(boolean exibirPontos) {
+        this.exibirPontos = exibirPontos;
+    }
+
+    public HashMap<String, HashMap<Number, Number>> getValores() {
+        return valores;
+    }
+
+    public void setValores(HashMap<String, HashMap<Number, Number>> valores) {
+        this.valores = valores;
     }
 
 }

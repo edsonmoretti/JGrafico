@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.edsonmoretti.jgrafico;
+package br.com.edsonmoretti.jgrafico.grupos;
 
 import java.util.Map;
 import java.util.TreeMap;

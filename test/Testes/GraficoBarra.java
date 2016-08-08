@@ -3,30 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.edsonmoretti.jgrafico.Testes;
+package Testes;
 
 import br.com.edsonmoretti.jgrafico.JGraficoBarra;
-import br.com.edsonmoretti.jgrafico.JGraficoGrupo;
+import br.com.edsonmoretti.jgrafico.grupos.JGraficoGrupo;
 import br.com.edsonmoretti.jgrafico.JGraficoTipoDimensao;
-import java.awt.Dialog;
-import java.awt.EventQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.WindowConstants;
 import org.jfree.chart.plot.PlotOrientation;
 
 /**
  *
  * @author Edson Moretti
  */
-public class GraficoBarraTeste {
+public class GraficoBarra {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        JGraficoBarra demo = 
-                new JGraficoBarra("Edson Moretti - JGrafico", JGraficoTipoDimensao._3D);
+        JGraficoBarra demo = new JGraficoBarra("Edson Moretti - www.edsonmoretti.com.br", JGraficoTipoDimensao._3D);
         demo.setTituloDoGrafico("Titulo do Gráfico Barra");
 
         JGraficoGrupo g1 = new JGraficoGrupo("Janeiro");
@@ -50,7 +44,6 @@ public class GraficoBarraTeste {
         demo.setOrientacao(PlotOrientation.VERTICAL);
         demo.exibirLegendas(true);
         demo.exibirTooltip(true);
-        demo.centralizaNaTela();
         demo.setVisible(true);
     }
 

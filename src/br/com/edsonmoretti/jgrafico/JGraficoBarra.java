@@ -5,6 +5,7 @@
  */
 package br.com.edsonmoretti.jgrafico;
 
+import br.com.edsonmoretti.jgrafico.grupos.JGraficoGrupo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -30,6 +31,7 @@ public class JGraficoBarra extends JGrafico {
         this(titulo);
         tipoDimensao = tipo;
     }
+
     public JGraficoBarra(String titulo) {
         super(titulo);
     }

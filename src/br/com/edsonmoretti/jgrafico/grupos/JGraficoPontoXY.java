@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.edsonmoretti.jgrafico;
+package br.com.edsonmoretti.jgrafico.grupos;
 
+import java.awt.Color;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,16 +13,16 @@ import java.util.TreeMap;
  *
  * @author Edson Moretti
  */
-public final class JGraficoGrupoXY extends TreeMap<Number, Number> {
+public final class JGraficoPontoXY extends TreeMap<Number, Number> {
 
     private String titulo;
 
-    public JGraficoGrupoXY(Map<? extends Number, ? extends Number> map, String titulo) {
+    public JGraficoPontoXY(Map<? extends Number, ? extends Number> map, String titulo) {
         super(map);
         setTitulo(titulo);
     }
 
-    public JGraficoGrupoXY(String titulo) {
+    public JGraficoPontoXY(String titulo) {
         this.titulo = titulo;
     }
 

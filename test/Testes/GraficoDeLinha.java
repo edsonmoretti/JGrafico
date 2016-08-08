@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.edsonmoretti.jgrafico.Testes;
+package Testes;
 
 import br.com.edsonmoretti.jgrafico.JGraficoDeLinha;
-import br.com.edsonmoretti.jgrafico.JGraficoGrupo;
+import br.com.edsonmoretti.jgrafico.grupos.JGraficoGrupo;
 import org.jfree.chart.plot.PlotOrientation;
 
 /**
@@ -19,7 +19,7 @@ public class GraficoDeLinha {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        JGraficoDeLinha demo = new JGraficoDeLinha("Edson Moretti - JGrafico");
+        JGraficoDeLinha demo = new JGraficoDeLinha("Edson Moretti - www.edsonmoretti.com.br");
         demo.setTituloDoGrafico("Titulo do Gráfico DeLinha - Crescimento de Vendas");
 
         JGraficoGrupo g1 = new JGraficoGrupo("Vendas do produto 1");
@@ -29,7 +29,7 @@ public class GraficoDeLinha {
         g1.add("4. Abril", 2100);
         g1.add("5. Maio", 1900);
         g1.add("6. Junho", 3000);
-        
+
         JGraficoGrupo g2 = new JGraficoGrupo("Vendas do produto 2");
         g2.add("1. Janeiro", 1000);
         g2.add("2. Fevereiro", 1200);
@@ -44,7 +44,6 @@ public class GraficoDeLinha {
 //        demo.setOrientacao(PlotOrientation.HORIZONTAL);
         demo.exibirLegendas(true);
         demo.exibirTooltip(true);
-        demo.centralizaNaTela();
         demo.setVisible(true);
     }
 

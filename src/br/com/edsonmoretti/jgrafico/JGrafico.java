@@ -5,7 +5,6 @@
  */
 package br.com.edsonmoretti.jgrafico;
 
-import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -20,7 +19,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -39,14 +37,6 @@ public class JGrafico extends ApplicationFrame {
 
     public void setTituloDoGrafico(String titulo) {
         this.tituloDoGrafico = titulo;
-    }
-
-    public void centralizaNaTela(Dialog d) {
-        RefineryUtilities.centerDialogInParent(d);
-    }
-
-    public void centralizaNaTela() {
-        RefineryUtilities.centerFrameOnScreen(this);
     }
 
     public JPanel criarJPanel() {

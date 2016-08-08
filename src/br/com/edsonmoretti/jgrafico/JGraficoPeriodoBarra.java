@@ -9,132 +9,202 @@ package br.com.edsonmoretti.jgrafico;
  *
  * @author Edson Moretti
  */
+import br.com.edsonmoretti.jgrafico.grupos.JGraficoGrupoPeriodo;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
-
-import javax.swing.JPanel;
+import java.util.Date;
+import java.util.TreeMap;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.PeriodAxis;
 import org.jfree.chart.axis.PeriodAxisLabelInfo;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.IntervalXYDataset;
-import org.jfree.ui.ApplicationFrame;
+import org.jfree.data.time.Year;
 import org.jfree.ui.RectangleInsets;
-import org.jfree.ui.RefineryUtilities;
 
 /**
  * In this demo, the {@link PeriodAxis} class is used to display both date and
  * day-of-the-week labels on a bar chart.
  */
-public class JGraficoPeriodoBarra extends ApplicationFrame {
+public class JGraficoPeriodoBarra extends JGrafico {
 
-    /**
-     * A demonstration application showing how to create a simple time series
-     * chart. This example uses monthly data.
-     *
-     * @param title the frame title.
-     */
+    private TimeSeriesCollection timeseries = new TimeSeriesCollection();
+    private String rotuloInferior;
+    private String rotuloLateralEsquerdo;
+    private PlotOrientation orientacao = PlotOrientation.VERTICAL;
+    private boolean exibirCliqueXY;
+    private boolean exibirAno;
+    private boolean exibirMes;
+    private boolean exibirDiaDaSemana;
+    private boolean exibirNumeroDoDiaNoMes;
+
     public JGraficoPeriodoBarra(String title) {
         super(title);
-        JPanel chartPanel = createDemoPanel();
-        chartPanel.setPreferredSize(new Dimension(500, 270));
-        setContentPane(chartPanel);
     }
 
-    /**
-     * Creates a chart.
-     *
-     * @param dataset a dataset.
-     *
-     * @return A chart.
-     */
-    private JFreeChart createChart(IntervalXYDataset dataset) {
-
-        JFreeChart chart = ChartFactory.createXYBarChart("Maximum Temperature",
-                "Day", true, "Temperature", dataset, PlotOrientation.VERTICAL,
-                true, true, false);
-
+    @Override
+    public JFreeChart criarGrafico() {
+        JFreeChart chart = ChartFactory.createXYBarChart(
+                getTituloDoGrafico(),
+                rotuloInferior,
+                true,
+                rotuloLateralEsquerdo,
+                timeseries,
+                getOrientacao(),
+                isExibirLegendas(),
+                isExibirTooltips(),
+                false);
         XYPlot plot = (XYPlot) chart.getPlot();
 
-        plot.setDomainCrosshairVisible(true);
-        plot.setRangeCrosshairVisible(true);
+        plot.setDomainCrosshairVisible(isExibirCliqueXY());
+        plot.setRangeCrosshairVisible(isExibirCliqueXY());
 
-        PeriodAxis domainAxis = new PeriodAxis("Day");
-        domainAxis.setAutoRangeTimePeriodClass(Day.class);
-        PeriodAxisLabelInfo[] info = new PeriodAxisLabelInfo[3];
-        info[0] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("d"));
-        info[1] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("E"),
-                new RectangleInsets(2, 2, 2, 2), new Font("SansSerif", Font.BOLD,
-                        10), Color.blue, false, new BasicStroke(0.0f), Color.lightGray);
-        info[2] = new PeriodAxisLabelInfo(Month.class,
-                new SimpleDateFormat("MMM"));
-        domainAxis.setLabelInfo(info);
+        PeriodAxis domainAxis = new PeriodAxis(getRotuloInferior());
+//        domainAxis.setAutoRangeTimePeriodClass(Day.class);
+
+        int i = getInformacaoFooterCount();
+        PeriodAxisLabelInfo[] infoDeBaixo = new PeriodAxisLabelInfo[i];
+        i = 0;
+        if (exibirNumeroDoDiaNoMes) {
+            infoDeBaixo[i++] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("d"));
+        }
+        if (exibirDiaDaSemana) {
+            infoDeBaixo[i++] = new PeriodAxisLabelInfo(Day.class, new SimpleDateFormat("E"), new RectangleInsets(2, 2, 2, 2), new Font("SansSerif", Font.BOLD, 10), Color.blue, false, new BasicStroke(0.0f), Color.lightGray);
+        }
+        if (exibirMes) {
+            infoDeBaixo[i++] = new PeriodAxisLabelInfo(Month.class, new SimpleDateFormat("MMM"));
+        }
+        if (exibirAno) {
+            infoDeBaixo[i++] = new PeriodAxisLabelInfo(Year.class, new SimpleDateFormat("YYYY"));
+        }
+        domainAxis.setLabelInfo(infoDeBaixo);
         plot.setDomainAxis(domainAxis);
-
         ChartUtilities.applyCurrentTheme(chart);
-
         return chart;
-
     }
 
-    /**
-     * Creates a dataset, consisting of two series of monthly data.
-     *
-     * @return the dataset.
-     */
-    private IntervalXYDataset createDataset() {
-        TimeSeries s1 = new TimeSeries("Temperature");
-        s1.add(new Day(1, 4, 2006), 14.5);
-        s1.add(new Day(2, 4, 2006), 11.5);
-        s1.add(new Day(3, 4, 2006), 13.7);
-        s1.add(new Day(4, 4, 2006), 10.5);
-        s1.add(new Day(5, 4, 2006), 14.9);
-        s1.add(new Day(6, 4, 2006), 15.7);
-        s1.add(new Day(7, 4, 2006), 11.5);
-        s1.add(new Day(8, 4, 2006), 9.5);
-        s1.add(new Day(9, 4, 2006), 10.9);
-        s1.add(new Day(10, 4, 2006), 14.1);
-        s1.add(new Day(11, 4, 2006), 12.3);
-        s1.add(new Day(12, 4, 2006), 14.3);
-        s1.add(new Day(13, 4, 2006), 19.0);
-        s1.add(new Day(14, 4, 2006), 17.9);
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(s1);
-        return dataset;
+    public int getInformacaoFooterCount() {
+        int i = 0;
+        if (exibirNumeroDoDiaNoMes) {
+            i++;
+        }
+        if (exibirDiaDaSemana) {
+            i++;
+        }
+        if (exibirMes) {
+            i++;
+        }
+        if (exibirAno) {
+            i++;
+        }
+        return i;
     }
 
-    /**
-     * Creates a panel for the demo (used by SuperDemo.java).
-     *
-     * @return A panel.
-     */
-    public JPanel createDemoPanel() {
-        JFreeChart chart = createChart(createDataset());
-        return new ChartPanel(chart);
+    public void adicionar(JGraficoGrupoPeriodo grupo) {
+        TimeSeries ts = new TimeSeries(grupo.getTitulo());
+        for (Date date : grupo.keySet()) {
+            ts.add(new Day(date), grupo.get(date));
+        }
+        timeseries.addSeries(ts);
     }
 
-    /**
-     * Starting point for the demonstration application.
-     *
-     * @param args ignored.
-     */
-    public static void main(String[] args) {
-        JGraficoPeriodoBarra demo = new JGraficoPeriodoBarra("JFreeChart: PeriodAxisDemo3.java");
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
+    public void limpar() {
+        timeseries.removeAllSeries();
+    }
+
+    public boolean isExibirAno() {
+        return exibirAno;
+    }
+
+    public void setExibirAno(boolean exibirAno) {
+        this.exibirAno = exibirAno;
+    }
+
+    public boolean isExibirMes() {
+        return exibirMes;
+    }
+
+    public void setExibirMes(boolean exibirMes) {
+        this.exibirMes = exibirMes;
+    }
+
+    public boolean isExibirDiaDaSemana() {
+        return exibirDiaDaSemana;
+    }
+
+    public void setExibirDiaDaSemana(boolean exibirDiaDaSemana) {
+        this.exibirDiaDaSemana = exibirDiaDaSemana;
+    }
+
+    public boolean isExibirNumeroDoDiaNoMes() {
+        return exibirNumeroDoDiaNoMes;
+    }
+
+    public void setExibirNumeroDoDiaNoMes(boolean exibirNumeroDoDiaNoMes) {
+        this.exibirNumeroDoDiaNoMes = exibirNumeroDoDiaNoMes;
+    }
+
+    public String getDescricaoInferior() {
+        return rotuloInferior;
+    }
+
+    public String getDescricaoLateralEsquerda() {
+        return rotuloLateralEsquerdo;
+    }
+
+    public String getRotuloInferior() {
+        return rotuloInferior;
+    }
+
+    public void setDescricaoInferior(String rotuloInferior) {
+        this.rotuloInferior = rotuloInferior;
+    }
+
+    public String getDescricaoLateralEsquerdo() {
+        return rotuloLateralEsquerdo;
+    }
+
+    public void setRotuloInferior(String rotuloInferior) {
+        this.rotuloInferior = rotuloInferior;
+    }
+
+    public String getRotuloLateralEsquerdo() {
+        return rotuloLateralEsquerdo;
+    }
+
+    public void setRotuloLateralEsquerdo(String rotuloLateralEsquerdo) {
+        this.rotuloLateralEsquerdo = rotuloLateralEsquerdo;
+    }
+
+    public PlotOrientation getOrientacao() {
+        return orientacao;
+    }
+
+    public void setOrientacao(PlotOrientation orientacao) {
+        this.orientacao = orientacao;
+    }
+
+    public boolean isExibirCliqueXY() {
+        return exibirCliqueXY;
+    }
+
+    public void setExibirCliqueXY(boolean exibirCliqueXY) {
+        this.exibirCliqueXY = exibirCliqueXY;
+    }
+
+    public TimeSeriesCollection getTimeseries() {
+        return timeseries;
     }
 
 }
